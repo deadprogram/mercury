@@ -5,9 +5,9 @@ class FlyingRobot
     @throttle_speed = 0
     @throttle_direction = 'f'
     @rudder_deflection = 0
-    @rudder_direction = 'c'
+    @rudder_direction = 'l'
     @elevator_deflection = 0
-    @elevator_direction = 'c'
+    @elevator_direction = 'u'
   end
   
   def throttle_up
@@ -110,60 +110,81 @@ Shoes.setup do
 end
 
 #params for serial port
-port_str = "/dev/tty.usbserial-A700636n" # arduino via cable
-#port_str = "/dev/tty.usbserial-A6007uob" # xbee explorer
+#@port_str = "/dev/tty.usbserial-A8007UEt"
+port_str = "/dev/tty.usbserial-A700636n" # arduino via cable 
+#@port_str = "/dev/tty.usbserial-A6007uob" # xbee explorer
 baud_rate = 19200
 data_bits = 8
 stop_bits = 1
 parity = SerialPort::NONE
 
-sp = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)
-sp.flow_control = SerialPort::SOFT
-sp.read_timeout = 50
+SP = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)
+SP.flow_control = SerialPort::SOFT
+SP.read_timeout = 50
 
-robot = FlyingRobot.new
+FLYING_ROBOT = FlyingRobot.new
 
-Shoes.app :title => 'flying_robot virtual RC', :width => 640, :height => 400 do
+class Mercury < Shoes
   
-  @info = para "Starting flying_robot..."
+  url "/", :index
   
-  keypress do |k|
-    @key = k.inspect
-
-    if k == :page_up
-      robot.throttle_up
-      sp.write "t " + robot.throttle_direction + " " + robot.throttle_speed.to_s + "\r"
-      @info.replace sp.read
-    elsif k == :page_down
-      robot.throttle_down
-      sp.write "t " + robot.throttle_direction + " " + robot.throttle_speed.to_s + "\r"
-      @info.replace sp.read
-    elsif k == :right
-      robot.rudder_right
-      sp.write "r " + robot.rudder_direction + " " + robot.rudder_deflection.to_s + "\r"
-      @info.replace sp.read
-    elsif k == :left
-      robot.rudder_left
-      sp.write "r " + robot.rudder_direction + " " + robot.rudder_deflection.to_s + "\r"
-      @info.replace sp.read
-    elsif k == :up
-      robot.elevator_up
-      sp.write "e " + robot.elevator_direction + " " + robot.elevator_deflection.to_s + "\r"
-      @info.replace sp.read
-    elsif k == :down
-      robot.elevator_down
-      sp.write "e " + robot.elevator_direction + " " + robot.elevator_deflection.to_s + "\r"
-      @info.replace sp.read
-    elsif k == "h"
-      sp.write "h\r"
-      @info.replace sp.read
-    elsif k == "s"
-      sp.write "s\r"
-      @info.replace sp.read
-    else
-      @info.replace k
-    end
+  def sp
+    SP
   end
+  
+  def robot
+    FLYING_ROBOT
+  end
+  
+  def index
+    stack do
+      para "Mercury"
+    end
+    stack do 
+      @info = para "Starting flying_robot..."
+    end
+    
+    keypress do |k|
+      @key = k.inspect
+
+      if k == :page_up
+        robot.throttle_up
+        sp.write "t " + robot.throttle_direction + " " + robot.throttle_speed.to_s + "\r"
+        @info.replace sp.read
+      elsif k == :page_down
+        robot.throttle_down
+        sp.write "t " + robot.throttle_direction + " " + robot.throttle_speed.to_s + "\r"
+        @info.replace sp.read
+      elsif k == :right
+        robot.rudder_right
+        sp.write "r " + robot.rudder_direction + " " + robot.rudder_deflection.to_s + "\r"
+        @info.replace sp.read
+      elsif k == :left
+        robot.rudder_left
+        sp.write "r " + robot.rudder_direction + " " + robot.rudder_deflection.to_s + "\r"
+        @info.replace sp.read
+      elsif k == :up
+        robot.elevator_up
+        sp.write "e " + robot.elevator_direction + " " + robot.elevator_deflection.to_s + "\r"
+        @info.replace sp.read
+      elsif k == :down
+        robot.elevator_down
+        sp.write "e " + robot.elevator_direction + " " + robot.elevator_deflection.to_s + "\r"
+        @info.replace sp.read
+      elsif k == "h"
+        sp.write "h\r"
+        @info.replace sp.read
+      elsif k == "s"
+        sp.write "s\r"
+        @info.replace sp.read
+      else
+        @info.replace k
+      end
+    end
+    
+  end
+
   
 end
 
+Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 640, :height => 400
