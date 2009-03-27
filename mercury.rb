@@ -6,20 +6,7 @@ end
 
 require 'lib/flying_robot_proxy'
 
-#params for serial port
-#@port_str = "/dev/tty.usbserial-A8007UEt"
-port_str = "/dev/tty.usbserial-A700636n" # arduino via cable 
-#@port_str = "/dev/tty.usbserial-A6007uob" # xbee explorer
-baud_rate = 19200
-data_bits = 8
-stop_bits = 1
-parity = SerialPort::NONE
-
-SP = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)
-SP.flow_control = SerialPort::SOFT
-SP.read_timeout = 50
-
-FLYING_ROBOT = FlyingRobotProxy.new(SP)
+FLYING_ROBOT = FlyingRobotProxy.new
 
 class Mercury < Shoes
   
@@ -27,7 +14,7 @@ class Mercury < Shoes
   url "/settings", :settings
   
   def sp
-    SP
+    FLYING_ROBOT.sp
   end
   
   def robot
@@ -36,11 +23,10 @@ class Mercury < Shoes
   
   def index
     stack do
-      para "Mercury"
+      banner "Mercury"
     end
     stack do
-      para "Controls"
-      
+      button("Settings") {visit "/settings"}
     end
     stack do 
       @info = para "Starting flying_robot..."
@@ -80,7 +66,21 @@ class Mercury < Shoes
     
   end
 
-  
+  def settings
+    stack do
+      banner "Mercury"
+    end
+    stack do
+      para "Port"
+      @port = edit_line(:width => 200)
+      
+      button("Save") {
+        robot.connect(@port.text)
+        visit "/"
+      }
+    end
+    
+  end
 end
 
 Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 640, :height => 400
