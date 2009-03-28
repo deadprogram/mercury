@@ -1,5 +1,6 @@
 class FlyingRobotProxy
-  attr_reader :throttle_speed, :throttle_direction, :rudder_direction, :rudder_deflection, :elevator_direction, :elevator_deflection, :sp
+  attr_reader :throttle_speed, :throttle_direction, :rudder_direction, :rudder_deflection, :elevator_direction, :elevator_deflection,
+              :sp, :compass_heading
   
   def initialize
     @increment = 5
@@ -9,7 +10,7 @@ class FlyingRobotProxy
     @rudder_direction = 'l'
     @elevator_deflection = 0
     @elevator_direction = 'u'
-    #@sp = sp
+    @compass_heading = 0.0
   end
   
   def connect(port)
@@ -20,7 +21,7 @@ class FlyingRobotProxy
     data_bits = 8
     stop_bits = 1
     parity = SerialPort::NONE
-    # 
+
     @sp = SerialPort.new(port, baud_rate, data_bits, stop_bits, parity)
     @sp.flow_control = SerialPort::SOFT
     @sp.read_timeout = 50
@@ -33,6 +34,10 @@ class FlyingRobotProxy
   
   def connected?
     @sp
+  end
+  
+  def response
+    @sp.read
   end
   
   # flying_robot command set
@@ -140,4 +145,8 @@ class FlyingRobotProxy
     @sp.write "e " + @elevator_direction + " " + @elevator_deflection.to_s + "\r"
   end
   
+  def read_compass
+    @sp.write "i c\r"
+    @compass_heading = @sp.read
+  end
 end

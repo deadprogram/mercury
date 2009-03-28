@@ -11,75 +11,82 @@ FLYING_ROBOT = FlyingRobotProxy.new
 class Mercury < Shoes
   
   url "/", :index
-  url "/settings", :settings
-  
-  def sp
-    FLYING_ROBOT.sp
-  end
-  
-  def robot
-    FLYING_ROBOT
-  end
+  url "/fly", :fly
+  url "/connect", :connect
   
   def index
     stack do
       banner "Mercury"
     end
     stack do
-      button("Settings") {visit "/settings"}
+      button("Connect") {visit "/connect"}
     end
-    stack do 
+  end
+  
+  def fly
+    stack do
+      banner "Mercury"
+    end
+    stack do
+      @compass = para "Compass heading: ---" 
       @info = para "Starting flying_robot..."
     end
     
     keypress do |k|
-      @key = k.inspect
-
-      if k == :page_up
-        robot.throttle_up
-        @info.replace sp.read
-      elsif k == :page_down
-        robot.throttle_down
-        @info.replace sp.read
-      elsif k == :right
-        robot.rudder_right
-        @info.replace sp.read
-      elsif k == :left
-        robot.rudder_left
-        @info.replace sp.read
-      elsif k == :up
-        robot.elevator_up
-        @info.replace sp.read
-      elsif k == :down
-        robot.elevator_down
-        @info.replace sp.read
-      elsif k == "h"
-        robot.hail
-        @info.replace sp.read
-      elsif k == "s"
-        robot.status
-        @info.replace sp.read
-      else
-        @info.replace k
+      case k
+        when :page_up
+          robot.throttle_up
+          @info.replace robot.response
+        when :page_down
+          robot.throttle_down
+          @info.replace robot.response
+        when :right
+          robot.rudder_right
+          @info.replace robot.response
+        when :left
+          robot.rudder_left
+          @info.replace robot.response
+        when :up
+          robot.elevator_up
+          @info.replace robot.response
+        when :down
+          robot.elevator_down
+          @info.replace robot.response
+        when "h"
+          robot.hail
+          @info.replace robot.response
+        when "s"
+          robot.status
+          @info.replace robot.response
       end
     end
     
+    every(3) do |count|
+      if robot.connected?
+        robot.read_compass
+        @compass.replace robot.compass_heading
+      end
+    end
   end
 
-  def settings
+  def connect
     stack do
       banner "Mercury"
     end
     stack do
       para "Port"
-      @port = edit_line(:width => 200)
+      @port = edit_line("/dev/tty.usbserial-A700636n", :width => 200)
       
-      button("Save") {
+      button("Connect") {
         robot.connect(@port.text)
-        visit "/"
+        visit "/fly"
       }
     end
     
+  end
+  
+  def robot
+    FLYING_ROBOT
   end
 end
 
