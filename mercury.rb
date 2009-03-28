@@ -15,6 +15,7 @@ class Mercury < Shoes
   url "/connect", :connect
   
   def index
+    background "clouds.jpg"
     stack do
       banner "Mercury"
     end
