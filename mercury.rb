@@ -28,6 +28,7 @@ class Mercury < Shoes
       banner "Mercury"
     end
     stack do
+      @battery = para "Battery voltage: ---" 
       @compass = para "Compass heading: ---" 
       @info = para "Starting flying_robot..."
     end
@@ -65,6 +66,9 @@ class Mercury < Shoes
       if robot.connected?
         robot.read_compass
         @compass.replace robot.compass_heading
+        
+        robot.read_battery
+        @battery.replace robot.battery_level
       end
     end
   end
