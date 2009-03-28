@@ -38,29 +38,22 @@ class Mercury < Shoes
       case k
         when :page_up
           robot.throttle_up
-          @info.replace robot.response
         when :page_down
           robot.throttle_down
-          @info.replace robot.response
         when :right
           robot.rudder_right
-          @info.replace robot.response
         when :left
           robot.rudder_left
-          @info.replace robot.response
         when :up
           robot.elevator_up
-          @info.replace robot.response
         when :down
           robot.elevator_down
-          @info.replace robot.response
         when "h"
           robot.hail
-          @info.replace robot.response
         when "s"
           robot.status
-          @info.replace robot.response
       end
+      @info.replace robot.response
     end
     
     every(3) do |count|
