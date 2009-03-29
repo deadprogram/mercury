@@ -32,6 +32,7 @@ class Mercury < Shoes
       @battery = para "Battery voltage: ---" 
       @compass = para "Compass heading: ---" 
       @info = para "Starting flying_robot..."
+      #@wiimote = para "Wiimote: "
     end
     
     keypress do |k|
@@ -40,18 +41,20 @@ class Mercury < Shoes
           robot.throttle_up
         when :page_down
           robot.throttle_down
-        when :right
-          robot.rudder_right
         when :left
+          robot.rudder_right
+        when :right
           robot.rudder_left
-        when :up
-          robot.elevator_up
         when :down
+          robot.elevator_up
+        when :up
           robot.elevator_down
         when "h"
           robot.hail
         when "s"
           robot.status
+        when :tab
+          robot.stop
       end
       @info.replace robot.response
     end
@@ -62,7 +65,40 @@ class Mercury < Shoes
         @compass.replace robot.compass_heading
         
         robot.read_battery
-        @battery.replace robot.battery_level
+        @battery. replace robot.battery_level
+      end
+    end
+                                                
+    motion do |x, y|
+      if robot.connected?
+        left = x
+        left = 0 if left < 0
+        left = 640 if left > 640
+        top = y
+        top = 0 if top < 0
+        top = 480 if top > 480
+        
+        if top > 240
+          elevator_direction = "d"
+          elevator_deflection = ((top/2)/240.0 * 90).to_i
+        else
+          elevator_direction = "u"
+          elevator_deflection = 90 - (top/240.0 * 90).to_i
+        end
+        
+        if left > 320
+          rudder_direction = "r"
+          rudder_deflection = ((left/2)/320.0 * 90).to_i
+          
+        else
+          rudder_direction = "l"
+          rudder_deflection = 90 - (left/320.0 * 90).to_i
+          
+        end
+        
+        robot.set_elevator(elevator_direction, elevator_deflection)
+        robot.set_rudder(rudder_direction, rudder_deflection)
+        #@wiimote.replace "#{top}, #{left}"
       end
     end
   end
@@ -88,4 +124,4 @@ class Mercury < Shoes
   end
 end
 
-Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 640, :height => 400
+Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 640, :height => 480

@@ -49,6 +49,12 @@ class FlyingRobotProxy
     @sp.write "s\r"
   end
   
+  def set_throttle(direction, speed)
+    @throttle_direction = direction
+    @throttle_speed = speed
+    send_throttle_command
+  end
+  
   def throttle_up
     if @throttle_direction == 'f'
       @throttle_speed = @throttle_speed + @increment
@@ -59,17 +65,17 @@ class FlyingRobotProxy
       @throttle_speed = @throttle_speed - @increment
       if @throttle_speed < 0
         @throttle_direction = 'f'
-        @throttle_speed = 1
+        @throttle_speed = 0
       end
     end
-    @sp.write "t " + @throttle_direction + " " + @throttle_speed.to_s + "\r"
+    send_throttle_command
   end
   
   def throttle_down
     if @throttle_direction == 'f'
       @throttle_speed = @throttle_speed - @increment
       if @throttle_speed < 0
-        @throttle_speed = 1
+        @throttle_speed = 0
         @throttle_direction = 'r'
       end
     else
@@ -78,7 +84,18 @@ class FlyingRobotProxy
         @throttle_speed = 100
       end
     end
+    send_throttle_command
+  end
+  
+  def send_throttle_command
     @sp.write "t " + @throttle_direction + " " + @throttle_speed.to_s + "\r"
+  end
+  
+  
+  def set_rudder(direction, deflection)
+    @rudder_direction = direction
+    @rudder_deflection = deflection
+    send_rudder_command
   end
   
   def rudder_left
@@ -91,10 +108,10 @@ class FlyingRobotProxy
       @rudder_deflection = @rudder_deflection - @increment
       if @rudder_deflection < 0
         @rudder_direction = 'l'
-        @rudder_deflection = 1
+        @rudder_deflection = 0
       end
     end
-    @sp.write "r " + @rudder_direction + " " + @rudder_deflection.to_s + "\r"
+    send_rudder_command
   end
 
   def rudder_right
@@ -107,10 +124,20 @@ class FlyingRobotProxy
       @rudder_deflection = @rudder_deflection - @increment
       if @rudder_deflection < 0
         @rudder_direction = 'r'
-        @rudder_deflection = 1
+        @rudder_deflection = 0
       end
     end
+    send_rudder_command
+  end
+  
+  def send_rudder_command
     @sp.write "r " + @rudder_direction + " " + @rudder_deflection.to_s + "\r"
+  end
+  
+  def set_elevator(direction, deflection)
+    @elevator_direction = direction
+    @elevator_deflection = deflection
+    send_elevator_command
   end
   
   def elevator_up
@@ -123,10 +150,10 @@ class FlyingRobotProxy
       @elevator_deflection = @elevator_deflection - @increment
       if @elevator_deflection < 0
         @elevator_direction = 'u'
-        @elevator_deflection = 1
+        @elevator_deflection = 0
       end
     end
-    @sp.write "e " + @elevator_direction + " " + @elevator_deflection.to_s + "\r"
+    send_elevator_command
   end
 
   def elevator_down
@@ -139,10 +166,20 @@ class FlyingRobotProxy
       @elevator_deflection = @elevator_deflection - @increment
       if @elevator_deflection < 0
         @elevator_direction = 'd'
-        @elevator_deflection = 1
+        @elevator_deflection = 0
       end
     end
+    send_elevator_command
+  end
+  
+  def send_elevator_command
     @sp.write "e " + @elevator_direction + " " + @elevator_deflection.to_s + "\r"
+  end
+  
+  def stop
+    set_throttle("f", 0)
+    set_elevator("u", 0)
+    set_rudder("l", 0)
   end
   
   def read_compass
