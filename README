@@ -1,1 +1,5 @@
 Ground control software written using Shoes for the flying_robot Unmanned Aerial Vehicle
+
+  gem sources -a http://gems.github.com
+  
+  gem install toholio-serialport

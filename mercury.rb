@@ -1,14 +1,23 @@
 
 Shoes.setup do
   gem 'toholio-serialport'
-  require "serialport"
 end
 
+require "serialport"
 require 'lib/flying_robot_proxy'
 
 FLYING_ROBOT = FlyingRobotProxy.new
 
 class Mercury < Shoes
+  @session = {}
+  class << self
+    attr_reader :session
+  end
+
+  def session
+    Mercury.session
+  end
+  
   
   url "/", :index
   url "/fly", :fly
@@ -70,7 +79,7 @@ class Mercury < Shoes
     end
                                                 
     motion do |x, y|
-      if robot.connected?
+      if robot.connected? && session[:use_mouse]
         left = x
         left = 0 if left < 0
         left = 640 if left > 640
@@ -110,8 +119,10 @@ class Mercury < Shoes
     stack do
       para "Port"
       @port = edit_line("/dev/tty.usbserial-A700636n", :width => 200)
+      flow { @use_mouse = check; para "Use Mouse/Wiimote Cnotrol" }
       
       button("Connect") {
+        session[:use_mouse] = @use_mouse.checked?
         robot.connect(@port.text)
         visit "/fly"
       }
