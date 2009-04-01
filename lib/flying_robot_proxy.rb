@@ -1,6 +1,6 @@
 class FlyingRobotProxy
   attr_reader :throttle_speed, :throttle_direction, :rudder_direction, :rudder_deflection, :elevator_direction, :elevator_deflection,
-              :sp, :compass_heading, :battery_level
+              :sp, :compass_heading, :battery_level, :ir_beacon
   
   def initialize
     @increment = 5
@@ -200,5 +200,10 @@ class FlyingRobotProxy
   def read_battery
     @sp.write "i b\r"
     @battery_level = @sp.read
+  end
+  
+  def read_ir_beacon
+    @sp.write "i i\r"
+    @ir_beacon = @sp.read    
   end
 end

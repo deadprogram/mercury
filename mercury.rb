@@ -40,6 +40,7 @@ class Mercury < Shoes
     stack do
       @battery = para "Battery voltage: ---" 
       @compass = para "Compass heading: ---" 
+      @ir_beacon = para "IR: ---" 
       @info = para "Starting flying_robot..."
       #@wiimote = para "Wiimote: "
     end
@@ -76,7 +77,10 @@ class Mercury < Shoes
         @compass.replace robot.compass_heading
         
         robot.read_battery
-        @battery. replace robot.battery_level
+        @battery.replace robot.battery_level
+        
+        robot.read_ir_beacon
+        @ir_beacon.replace robot.ir_beacon
       end
     end
                                                 
