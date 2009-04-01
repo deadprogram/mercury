@@ -11,6 +11,7 @@ class FlyingRobotProxy
     @elevator_deflection = 0
     @elevator_direction = 'u'
     @compass_heading = 0.0
+    @autopilot_mode = 0
   end
   
   def connect(port)
@@ -180,6 +181,15 @@ class FlyingRobotProxy
     set_throttle("f", 0)
     set_elevator("u", 0)
     set_rudder("l", 0)
+  end
+  
+  def toggle_autopilot
+    if @autopilot_mode == 0
+      @autopilot_mode = 1
+    else
+      @autopilot_mode = 0
+    end
+    @sp.write "a #{@autopilot_mode}\r"
   end
   
   def read_compass

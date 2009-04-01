@@ -62,6 +62,8 @@ class Mercury < Shoes
           robot.hail
         when "s"
           robot.status
+        when "a"
+          robot.toggle_autopilot
         when :tab
           robot.stop
       end
