@@ -3,7 +3,8 @@ class FlyingRobotProxy
               :sp, :compass_heading, :battery_level, :ir_beacon
   
   def initialize
-    @increment = 5
+    @increment = 45
+    @throttle_increment = 10
     @throttle_speed = 0
     @throttle_direction = 'f'
     @rudder_deflection = 0
@@ -58,12 +59,12 @@ class FlyingRobotProxy
   
   def throttle_up
     if @throttle_direction == 'f'
-      @throttle_speed = @throttle_speed + @increment
+      @throttle_speed = @throttle_speed + @throttle_increment
       if @throttle_speed > 100
         @throttle_speed = 100
       end
     else
-      @throttle_speed = @throttle_speed - @increment
+      @throttle_speed = @throttle_speed - @throttle_increment
       if @throttle_speed < 0
         @throttle_direction = 'f'
         @throttle_speed = 0
@@ -74,13 +75,13 @@ class FlyingRobotProxy
   
   def throttle_down
     if @throttle_direction == 'f'
-      @throttle_speed = @throttle_speed - @increment
+      @throttle_speed = @throttle_speed - @throttle_increment
       if @throttle_speed < 0
         @throttle_speed = 0
         @throttle_direction = 'r'
       end
     else
-      @throttle_speed = @throttle_speed + @increment
+      @throttle_speed = @throttle_speed + @throttle_increment
       if @throttle_speed > 100
         @throttle_speed = 100
       end

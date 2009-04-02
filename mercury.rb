@@ -43,8 +43,9 @@ class Mercury < Shoes
       @ir_beacon = para "IR: ---" 
       @info = para "Starting flying_robot..."
       #@wiimote = para "Wiimote: "
+      
     end
-    
+
     keypress do |k|
       case k
         when :page_up
