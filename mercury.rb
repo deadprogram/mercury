@@ -79,9 +79,6 @@ class Mercury < Shoes
         
         robot.read_battery
         @battery.replace robot.battery_level
-        
-        robot.read_ir_beacon
-        @ir_beacon.replace robot.ir_beacon
       end
     end
                                                 
