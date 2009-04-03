@@ -145,8 +145,8 @@ class FlyingRobotProxy
   def elevator_up
     if @elevator_direction == 'u'
       @elevator_deflection = @elevator_deflection + @increment
-      if @elevator_deflection > 90
-        @elevator_deflection = 90
+      if @elevator_deflection > 45
+        @elevator_deflection = 45
       end
     else
       @elevator_deflection = @elevator_deflection - @increment
@@ -161,8 +161,8 @@ class FlyingRobotProxy
   def elevator_down
     if @elevator_direction == 'd'
       @elevator_deflection = @elevator_deflection + @increment
-      if @elevator_deflection > 90
-        @elevator_deflection = 90
+      if @elevator_deflection > 45
+        @elevator_deflection = 45
       end
     else
       @elevator_deflection = @elevator_deflection - @increment
