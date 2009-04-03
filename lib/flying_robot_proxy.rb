@@ -108,7 +108,7 @@ class FlyingRobotProxy
       end
     else
       @rudder_deflection = @rudder_deflection - @increment
-      if @rudder_deflection < 0
+      if @rudder_deflection <= 0
         @rudder_direction = 'l'
         @rudder_deflection = 0
       end
@@ -124,7 +124,7 @@ class FlyingRobotProxy
       end
     else
       @rudder_deflection = @rudder_deflection - @increment
-      if @rudder_deflection < 0
+      if @rudder_deflection <= 0
         @rudder_direction = 'r'
         @rudder_deflection = 0
       end
@@ -150,7 +150,7 @@ class FlyingRobotProxy
       end
     else
       @elevator_deflection = @elevator_deflection - @increment
-      if @elevator_deflection < 0
+      if @elevator_deflection <= 0
         @elevator_direction = 'u'
         @elevator_deflection = 0
       end
@@ -166,7 +166,7 @@ class FlyingRobotProxy
       end
     else
       @elevator_deflection = @elevator_deflection - @increment
-      if @elevator_deflection < 0
+      if @elevator_deflection <= 0
         @elevator_direction = 'd'
         @elevator_deflection = 0
       end
