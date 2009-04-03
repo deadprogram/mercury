@@ -71,7 +71,7 @@ class Mercury < Shoes
       @info.replace robot.response
     end
     
-    every(3) do |count|
+    every(1) do |count|
       if robot.connected?
         robot.read_compass
         @compass.replace robot.compass_heading
@@ -83,8 +83,8 @@ class Mercury < Shoes
         draw_background
         draw_compass_hand
       end
-      @battery_power = @battery.text[15, @battery.text.length].to_f
-      @battery_display.fraction = ( @battery_power - 6250) / 2000.0
+      @battery_power = @battery.text[17, @battery.text.length].to_f
+      @battery_display.fraction = (@battery_power - 6250).to_f / 2000.0
     end
     
     
