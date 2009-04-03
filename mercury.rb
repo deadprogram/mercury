@@ -38,13 +38,12 @@ class Mercury < Shoes
       banner "Mercury"
     end
     stack do
+      stack { @info = para "Starting flying_robot..." }
       @battery = para "Battery voltage: ---" 
       @compass = para "Compass heading: ---" 
-      @compass_display = flow {draw_background}
-      @info = para "Starting flying_robot..."
-      #@wiimote = para "Wiimote: "
+      @compass_display = flow { draw_background }
+      flow { @battery_display = progress }
     end
-
 
     keypress do |k|
       case k
@@ -84,6 +83,8 @@ class Mercury < Shoes
         draw_background
         draw_compass_hand
       end
+      @battery_power = @battery.text[15, @battery.text.length].to_f
+      @battery_display.fraction = ( @battery_power - 6250) / 2000
     end
     
     
