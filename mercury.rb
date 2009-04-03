@@ -26,7 +26,7 @@ class Mercury < Shoes
   def index
     background "clouds.jpg"
     stack do
-      banner "Mercury"
+      banner "Control", :align => 'center'
     end
     stack do
       button("Connect") {visit "/connect"}
@@ -34,15 +34,23 @@ class Mercury < Shoes
   end
   
   def fly
+    background "clouds.jpg"
     stack do
-      banner "Mercury"
+      banner "Control", :align => 'center'
     end
     stack do
-      stack { @info = para "Starting flying_robot..." }
-      @battery = para "Battery voltage: ---" 
-      @compass = para "Compass heading: ---" 
-      @compass_display = flow { draw_background }
-      flow { @battery_display = progress }
+      @battery = "Battery voltage: 0" 
+      @compass = "Compass heading: 0"
+      stack do
+        @compass_display = flow(:width => 280, :height => 280, :align => 'center') { draw_background }
+      end
+      stack do
+        flow(:margin_left => 20, :margin_top => 20, :align => 'center') { @battery_display = progress }
+      end
+      stack(:height => 100) do
+        background black
+        @info = para "Starting flying_robot...", :font => 'Courier', :stroke => green
+      end
     end
 
     keypress do |k|
@@ -74,16 +82,16 @@ class Mercury < Shoes
     every(1) do |count|
       if robot.connected?
         robot.read_compass
-        @compass.replace robot.compass_heading
+        @compass = robot.compass_heading
         
         robot.read_battery
-        @battery.replace robot.battery_level
+        @battery = robot.battery_level
       end
       @compass_display.clear do
         draw_background
         draw_compass_hand
       end
-      @battery_power = @battery.text[17, @battery.text.length].to_f
+      @battery_power = @battery[17, @battery.length].to_f
       @battery_display.fraction = (@battery_power - 6250).to_f / 2000.0
     end
     
@@ -125,7 +133,7 @@ class Mercury < Shoes
 
   def draw_background
     @centerx, @centery = 126, 140
-    background rgb(230, 240, 200)
+    #background rgb(230, 240, 200)
 
     fill white
     stroke black
@@ -142,11 +150,15 @@ class Mercury < Shoes
     line(@centerx - 102, @centery, @centerx - 95, @centery)
     line(@centerx + 95, @centery, @centerx + 102, @centery)
     line(@centerx, @centery + 95, @centerx, @centery + 102)
+    @north = para "N", :top => @centery - 130, :left => @centerx - 10
+    @south = para "S", :top => @centery + 104, :left => @centerx - 10
+    @west = para "W", :top => @centery - 12, :left => @centerx - 126
+    @east = para "E", :top => @centery - 12, :left => @centerx + 104
   end
 
   def draw_compass_hand
     @centerx, @centery = 126, 140
-    @current_reading = @compass.text[17, @compass.text.length].to_f
+    @current_reading = @compass[17, @compass.length].to_f
     _x = 90 * Math.sin( @current_reading * Math::PI / 180 )
     _y = 90 * Math.cos( @current_reading * Math::PI / 180 )
     stroke black
@@ -155,13 +167,14 @@ class Mercury < Shoes
   end
 
   def connect
+    background "clouds.jpg"
     stack do
-      banner "Mercury"
+      banner "Control", :align => 'center'
     end
     stack do
-      para "Port"
-      @port = edit_line("/dev/tty.usbserial-A700636n", :width => 200)
-      flow { @use_mouse = check; para "Use Mouse/Wiimote Cnotrol" }
+      caption "Port"
+      @port = list_box(:items => ["/dev/tty.usbserial-A700636n", "/dev/tty.usbserial-A6007uob"], :width => 200)
+      flow { @use_mouse = check; para "Use Mouse Control" }
       
       button("Connect") {
         session[:use_mouse] = @use_mouse.checked?
@@ -177,4 +190,4 @@ class Mercury < Shoes
   end
 end
 
-Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 640, :height => 480
+Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 250, :height => 520
