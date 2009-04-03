@@ -79,7 +79,7 @@ class Mercury < Shoes
       @info.replace robot.response
     end
     
-    every(1) do |count|
+    animate(4) do |count|
       if robot.connected?
         robot.read_compass
         @compass = robot.compass_heading
