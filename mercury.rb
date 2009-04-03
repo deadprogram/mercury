@@ -40,11 +40,11 @@ class Mercury < Shoes
     stack do
       @battery = para "Battery voltage: ---" 
       @compass = para "Compass heading: ---" 
-      @ir_beacon = para "IR: ---" 
+      @compass_display = flow {draw_background}
       @info = para "Starting flying_robot..."
       #@wiimote = para "Wiimote: "
-      
     end
+
 
     keypress do |k|
       case k
@@ -80,40 +80,77 @@ class Mercury < Shoes
         robot.read_battery
         @battery.replace robot.battery_level
       end
-    end
-                                                
-    motion do |x, y|
-      if robot.connected? && session[:use_mouse]
-        left = x
-        left = 0 if left < 0
-        left = 640 if left > 640
-        top = y
-        top = 0 if top < 0
-        top = 480 if top > 480
-        
-        if top > 240
-          elevator_direction = "d"
-          elevator_deflection = ((top/2)/240.0 * 90).to_i
-        else
-          elevator_direction = "u"
-          elevator_deflection = 90 - (top/240.0 * 90).to_i
-        end
-        
-        if left > 320
-          rudder_direction = "r"
-          rudder_deflection = ((left/2)/320.0 * 90).to_i
-          
-        else
-          rudder_direction = "l"
-          rudder_deflection = 90 - (left/320.0 * 90).to_i
-          
-        end
-        
-        robot.set_elevator(elevator_direction, elevator_deflection)
-        robot.set_rudder(rudder_direction, rudder_deflection)
-        #@wiimote.replace "#{top}, #{left}"
+      @compass_display.clear do
+        draw_background
+        draw_compass_hand
       end
     end
+    
+    
+                                                
+    # motion do |x, y|
+    #   if robot.connected? && session[:use_mouse]
+    #     left = x
+    #     left = 0 if left < 0
+    #     left = 640 if left > 640
+    #     top = y
+    #     top = 0 if top < 0
+    #     top = 480 if top > 480
+    #     
+    #     if top > 240
+    #       elevator_direction = "d"
+    #       elevator_deflection = ((top/2)/240.0 * 90).to_i
+    #     else
+    #       elevator_direction = "u"
+    #       elevator_deflection = 90 - (top/240.0 * 90).to_i
+    #     end
+    #     
+    #     if left > 320
+    #       rudder_direction = "r"
+    #       rudder_deflection = ((left/2)/320.0 * 90).to_i
+    #       
+    #     else
+    #       rudder_direction = "l"
+    #       rudder_deflection = 90 - (left/320.0 * 90).to_i
+    #       
+    #     end
+    #     
+    #     robot.set_elevator(elevator_direction, elevator_deflection)
+    #     robot.set_rudder(rudder_direction, rudder_deflection)
+    #     #@wiimote.replace "#{top}, #{left}"
+    #   end
+    # end
+  end
+
+  def draw_background
+    @centerx, @centery = 126, 140
+    background rgb(230, 240, 200)
+
+    fill white
+    stroke black
+    strokewidth 4
+    oval @centerx - 102, @centery - 102, 204, 204
+
+    fill black
+    nostroke
+    oval @centerx - 5, @centery - 5, 10, 10
+
+    stroke black
+    strokewidth 1
+    line(@centerx, @centery - 102, @centerx, @centery - 95)
+    line(@centerx - 102, @centery, @centerx - 95, @centery)
+    line(@centerx + 95, @centery, @centerx + 102, @centery)
+    line(@centerx, @centery + 95, @centerx, @centery + 102)
+  end
+
+  def draw_compass_hand
+    @centerx, @centery = 126, 140
+    @current_reading = @compass.text[15, @compass.text.length].to_i
+    _x = 90 * Math.sin( @current_reading * Math::PI / 360 )
+    _y = 90 * Math.cos( @current_reading * Math::PI / 360 )
+    stroke black
+    strokewidth 6
+    line(@centerx, @centery, @centerx + _x, @centery - _y)
   end
 
   def connect
