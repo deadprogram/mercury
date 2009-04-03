@@ -3,7 +3,8 @@ class FlyingRobotProxy
               :sp, :compass_heading, :battery_level
   
   def initialize
-    @increment = 45
+    @rudder_increment = 90
+    @elevator_increment = 23
     @throttle_increment = 10
     @throttle_speed = 0
     @throttle_direction = 'f'
@@ -102,12 +103,12 @@ class FlyingRobotProxy
   
   def rudder_left
     if @rudder_direction == 'l'
-      @rudder_deflection = @rudder_deflection + @increment
+      @rudder_deflection = @rudder_deflection + @rudder_increment
       if @rudder_deflection > 90
         @rudder_deflection = 90
       end
     else
-      @rudder_deflection = @rudder_deflection - @increment
+      @rudder_deflection = @rudder_deflection - @rudder_increment
       if @rudder_deflection <= 0
         @rudder_direction = 'l'
         @rudder_deflection = 0
@@ -118,12 +119,12 @@ class FlyingRobotProxy
 
   def rudder_right
     if @rudder_direction == 'r'
-      @rudder_deflection = @rudder_deflection + @increment
+      @rudder_deflection = @rudder_deflection + @rudder_increment
       if @rudder_deflection > 90
         @rudder_deflection = 90
       end
     else
-      @rudder_deflection = @rudder_deflection - @increment
+      @rudder_deflection = @rudder_deflection - @rudder_increment
       if @rudder_deflection <= 0
         @rudder_direction = 'r'
         @rudder_deflection = 0
@@ -144,12 +145,12 @@ class FlyingRobotProxy
   
   def elevator_up
     if @elevator_direction == 'u'
-      @elevator_deflection = @elevator_deflection + @increment
+      @elevator_deflection = @elevator_deflection + @elevator_increment
       if @elevator_deflection > 45
         @elevator_deflection = 45
       end
     else
-      @elevator_deflection = @elevator_deflection - @increment
+      @elevator_deflection = @elevator_deflection - @elevator_increment
       if @elevator_deflection <= 0
         @elevator_direction = 'u'
         @elevator_deflection = 0
@@ -160,12 +161,12 @@ class FlyingRobotProxy
 
   def elevator_down
     if @elevator_direction == 'd'
-      @elevator_deflection = @elevator_deflection + @increment
+      @elevator_deflection = @elevator_deflection + @elevator_increment
       if @elevator_deflection > 45
         @elevator_deflection = 45
       end
     else
-      @elevator_deflection = @elevator_deflection - @increment
+      @elevator_deflection = @elevator_deflection - @elevator_increment
       if @elevator_deflection <= 0
         @elevator_direction = 'd'
         @elevator_deflection = 0
