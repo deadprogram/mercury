@@ -3,7 +3,7 @@ class FlyingRobotProxy
               :sp, :compass_heading, :battery_level
   
   def initialize
-    @rudder_increment = 90
+    @rudder_increment = 45
     @elevator_increment = 23
     @throttle_increment = 10
     @throttle_speed = 0
