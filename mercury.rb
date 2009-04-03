@@ -84,7 +84,7 @@ class Mercury < Shoes
         draw_compass_hand
       end
       @battery_power = @battery.text[15, @battery.text.length].to_f
-      @battery_display.fraction = ( @battery_power - 6250) / 2000
+      @battery_display.fraction = ( @battery_power - 6250) / 2000.0
     end
     
     
@@ -146,7 +146,7 @@ class Mercury < Shoes
 
   def draw_compass_hand
     @centerx, @centery = 126, 140
-    @current_reading = @compass.text[15, @compass.text.length].to_f
+    @current_reading = @compass.text[17, @compass.text.length].to_f
     _x = 90 * Math.sin( @current_reading * Math::PI / 360 )
     _y = 90 * Math.cos( @current_reading * Math::PI / 360 )
     stroke black
