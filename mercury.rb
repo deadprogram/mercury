@@ -79,20 +79,26 @@ class Mercury < Shoes
       @info.replace robot.response
     end
     
+    # update battery meter
+    every(5) do |count|
+      if robot.connected?
+        robot.read_battery
+        @battery = robot.battery_level
+      end
+      @battery_power = @battery[17, @battery.length].to_f
+      @battery_display.fraction = (@battery_power - 6250).to_f / 2000.0
+    end
+    
+    # update compass
     animate(4) do |count|
       if robot.connected?
         robot.read_compass
         @compass = robot.compass_heading
-        
-        robot.read_battery
-        @battery = robot.battery_level
       end
       @compass_display.clear do
         draw_background
         draw_compass_hand
       end
-      @battery_power = @battery[17, @battery.length].to_f
-      @battery_display.fraction = (@battery_power - 6250).to_f / 2000.0
     end
     
     
