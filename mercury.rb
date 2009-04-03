@@ -147,8 +147,8 @@ class Mercury < Shoes
   def draw_compass_hand
     @centerx, @centery = 126, 140
     @current_reading = @compass.text[17, @compass.text.length].to_f
-    _x = 90 * Math.sin( @current_reading * Math::PI / 360 )
-    _y = 90 * Math.cos( @current_reading * Math::PI / 360 )
+    _x = 90 * Math.sin( @current_reading * Math::PI / 180 )
+    _y = 90 * Math.cos( @current_reading * Math::PI / 180 )
     stroke black
     strokewidth 6
     line(@centerx, @centery, @centerx + _x, @centery - _y)
