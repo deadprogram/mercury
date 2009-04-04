@@ -59,9 +59,9 @@ class Mercury < Shoes
           robot.throttle_up
         when :page_down
           robot.throttle_down
-        when :left
-          robot.rudder_right
         when :right
+          robot.rudder_right
+        when :left
           robot.rudder_left
         when :down
           robot.elevator_up
