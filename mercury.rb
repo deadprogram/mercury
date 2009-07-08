@@ -85,12 +85,12 @@ class Mercury < Shoes
         robot.read_battery
         @battery = robot.battery_level
       end
-      @battery_power = @battery[17, @battery.length].to_f
+      @battery_power = @battery.to_f #[17, @battery.length].to_f
       @battery_display.fraction = (@battery_power - 6250).to_f / 2000.0
     end
     
     # update compass
-    animate(4) do |count|
+    animate(1) do |count|
       if robot.connected?
         robot.read_compass
         @compass = robot.compass_heading
@@ -164,8 +164,10 @@ class Mercury < Shoes
 
   def draw_compass_hand
     @centerx, @centery = 126, 140
-    @current_reading = @compass[17, @compass.length].to_f
+    @current_reading = @compass.to_f #[17, @compass.length].to_f
     return if @current_reading == 0.0
+    # the compass is oriented in reverse on the blimpduino, so switch it
+    @current_reading = (@current_reading + 180).modulo(360)
     _x = 90 * Math.sin( @current_reading * Math::PI / 180 )
     _y = 90 * Math.cos( @current_reading * Math::PI / 180 )
     stroke black
@@ -180,7 +182,7 @@ class Mercury < Shoes
     end
     stack do
       caption "Port"
-      @port = list_box(:items => ["/dev/tty.usbserial-A700636n", "/dev/tty.usbserial-A6007uob"], :width => 200)
+      @port = list_box(:items => ["/dev/tty.usbserial-A700636n", "/dev/tty.usbserial-A6007uob", "/dev/tty.usbserial-A8007UEt"], :width => 200)
       flow { @use_mouse = check; para "Use Mouse Control" }
       
       button("Connect") {

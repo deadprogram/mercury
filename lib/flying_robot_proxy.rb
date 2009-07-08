@@ -188,6 +188,8 @@ class FlyingRobotProxy
   def toggle_autopilot
     if @autopilot_mode == 0
       @autopilot_mode = 1
+    elsif @autopilot_mode == 1
+        @autopilot_mode = 2
     else
       @autopilot_mode = 0
     end
