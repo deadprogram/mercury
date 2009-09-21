@@ -16,18 +16,18 @@ class FlyingRobotProxy
     @autopilot_mode = 0
   end
   
-  def connect(port)
+  def connect(port, baud_rate = 19200)
     #@port_str = "/dev/tty.usbserial-A8007UEt"
     #port_str = "/dev/tty.usbserial-A700636n" # arduino via cable 
     # port_str = "/dev/tty.usbserial-A6007uob" # xbee explorer
-    baud_rate = 19200
+    #baud_rate = 19200
     data_bits = 8
     stop_bits = 1
     parity = SerialPort::NONE
 
     @sp = SerialPort.new(port, baud_rate, data_bits, stop_bits, parity)
     @sp.flow_control = SerialPort::SOFT
-    @sp.read_timeout = 50
+    @sp.read_timeout = 250
   end
   
   def disconnect
