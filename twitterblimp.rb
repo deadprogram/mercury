@@ -114,8 +114,9 @@ tweet_hello
 while true do
   p "Tweeting status..."
   @robot.status
-  res = @robot.response
   sleep 1
+  res = @robot.response
+  
   
   if not @notification_sent
     send_tweet(res)
