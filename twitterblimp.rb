@@ -133,15 +133,21 @@ while true do
       @robot.set_elevator('c', 0)
       @robot.set_rudder('l', 90)
       @robot.set_throttle('f', 40)
+      
+      send_tweet("I am happy now. I will spin for joy.")
     elsif robot_mood? == :sad
       @robot.set_elevator('d', 90)
       @robot.set_rudder('c', 0)
       @robot.set_throttle('f', 20)
+      
+      send_tweet("I am now sad. If that is how you feel, I will just crash.")
     else
       # bored
       @robot.set_elevator('c', 0)
       @robot.set_rudder('c', 0)
       @robot.set_throttle('f', 0)
+      
+      send_tweet("I am now bored.")
     end
   end
   sleep 30
