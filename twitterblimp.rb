@@ -44,10 +44,10 @@ def send_tweet(msg = "Hello")
   end
 end
 
-def search_10_recent_tweets_about_flyingrobot
+def search_recent_tweets_about_flyingrobot
   do_in_child do
     client = Grackle::Client.new
-    client[:search].search?(:q => "flyingrobot -from:flyingrobot", :rpp => "10", :since => Date.today.to_s)
+    client[:search].search?(:q => "flyingrobot -from:flyingrobot", :rpp => "5", :since => Date.today.to_s)
   end
 end
 
@@ -75,7 +75,7 @@ end
 
 def check_robot_mood
   return :bored if not @use_twitter
-  recent_tweets = search_10_recent_tweets_about_flyingrobot.results
+  recent_tweets = search_recent_tweets_about_flyingrobot.results
 
   happy = test_mood(recent_tweets, HAPPY_WORDS)
   sad = test_mood(recent_tweets, SAD_WORDS)
@@ -115,17 +115,22 @@ end
 @twitter_password = ARGV[3] 
 
 tweet_hello
-#sleep 10
-@notification_count = 4
+
+@robot.status
+@r = @robot.response
+p "Tweeting status..."
+send_tweet(@r)
+@notification_count = 5
+
+sleep 30
 
 # loop looking for tweets that tell us what to do
-while true do
-  p "Tweeting status..."
-  @robot.status
-  @r = @robot.response
-  @r = "Waiting for status..." if not @r.is_a?(String)
-  
+while true do  
   if @notification_count == 0
+    p "Tweeting status..."
+    @robot.status
+    @r = @robot.response
+    @r = "Waiting for status..." if not @r.is_a?(String)
     send_tweet(@r)
     @notification_count = 5
   else
