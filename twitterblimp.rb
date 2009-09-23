@@ -17,10 +17,15 @@ def do_in_child
   read, write = IO.pipe
 
   pid = fork do
-    read.close
-    result = yield
-    write.puts [Marshal.dump(result)].pack("m")
-    exit!
+    begin
+      read.close
+      result = yield
+      write.puts [Marshal.dump(result)].pack("m")
+    rescue
+      result = "waiting..."
+    ensure
+      exit!(0)
+    end
   end
 
   write.close
