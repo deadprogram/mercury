@@ -27,7 +27,7 @@ class FlyingRobotProxy
 
     @sp = SerialPort.new(port, baud_rate, data_bits, stop_bits, parity)
     @sp.flow_control = SerialPort::SOFT
-    @sp.read_timeout = 250
+    @sp.read_timeout = 500
   end
   
   def disconnect
