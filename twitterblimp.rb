@@ -116,7 +116,7 @@ while true do
   @robot.status
   sleep 1
   res = @robot.response
-  res ||= "Waiting for status..."
+  res = "Waiting for status..." if res.nil?
   
   if not @notification_sent
     send_tweet(res)
