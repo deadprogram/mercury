@@ -162,6 +162,8 @@ while true do
       send_tweet("I was previously #{robot_mood?}, but now I am bored.")
     end
     @current_mood = new_mood
+  else
+    send_tweet "I am still #{robot_mood?}."
   end
   sleep 30
 end
