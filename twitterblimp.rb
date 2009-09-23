@@ -163,7 +163,7 @@ while true do
     end
     @current_mood = new_mood
   end
-  sleep 15
+  sleep 30
 end
 
 
