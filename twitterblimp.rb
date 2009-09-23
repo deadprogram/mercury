@@ -116,7 +116,7 @@ end
 
 tweet_hello
 #sleep 10
-@notification_sent = false
+@notification_count = 4
 
 # loop looking for tweets that tell us what to do
 while true do
@@ -125,11 +125,11 @@ while true do
   @r = @robot.response
   @r = "Waiting for status..." if not @r.is_a?(String)
   
-  if not @notification_sent
+  if @notification_count == 0
     send_tweet(@r)
-    @notification_sent = true
+    @notification_count = 5
   else
-    @notification_sent = false
+    @notification_count = @notification_count - 1
   end
   
   p "Checking mood..."
@@ -145,7 +145,7 @@ while true do
     elsif new_mood == :sad
       @robot.set_elevator('d', 90)
       @robot.set_rudder('c', 0)
-      @robot.set_throttle('f', 20)
+      @robot.set_throttle('f', 50)
       
       send_tweet("I was previously #{robot_mood?}, but I am now sad. If that is how you feel, I will just crash.")
     else
@@ -158,7 +158,7 @@ while true do
     end
     @current_mood = new_mood
   end
-  sleep 30
+  sleep 15
 end
 
 
