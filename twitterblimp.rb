@@ -30,9 +30,10 @@ def do_in_child
 end
 
 def send_tweet(msg = "Hello")
+  $m = msg
   do_in_child do
     client = Grackle::Client.new(:auth=>{:type => :basic, :username => @twitter_username, :password => @twitter_password}, :headers => {'User-Agent' => "Twitterblimp/0.1 Grackle/#{Grackle::VERSION}"})
-    client.statuses.update!(:status => msg)
+    client.statuses.update!(:status => $m)
   end
 end
 
@@ -114,11 +115,11 @@ tweet_hello
 while true do
   p "Tweeting status..."
   @robot.status
-  res = @robot.response
-  res = "Waiting for status..." if not res.is_a?(String)
+  r = @robot.response
+  r = "Waiting for status..." if not r.is_a?(String)
   
   if not @notification_sent
-    send_tweet(res)
+    send_tweet(r)
     @notification_sent = true
   else
     @notification_sent = false
