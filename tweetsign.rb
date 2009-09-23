@@ -74,6 +74,8 @@ end
 # main routine
 clear_sign
 
+gets
+
 while true do
   p "Displaying tweets at #{Time.now}"
   display_recent_tweets
