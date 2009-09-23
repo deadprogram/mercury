@@ -32,6 +32,8 @@ def do_in_child
   result = read.read
   Process.wait2(pid)
   Marshal.load(result.unpack("m")[0])
+rescue
+  p "There was an error when Tweeting..."
 end
 
 def send_tweet(msg = "Hello")
