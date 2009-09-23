@@ -128,14 +128,13 @@ while true do
   new_mood = check_robot_mood
   if new_mood != robot_mood?
     puts "I was previously #{robot_mood?}, but now I am #{new_mood}"
-    @current_mood = new_mood
-    if robot_mood? == :happy
+    if new_mood == :happy
       @robot.set_elevator('c', 0)
       @robot.set_rudder('l', 90)
       @robot.set_throttle('f', 40)
       
       send_tweet("I was previously #{robot_mood?}, but now I am happy. I will spin for joy.")
-    elsif robot_mood? == :sad
+    elsif new_mood == :sad
       @robot.set_elevator('d', 90)
       @robot.set_rudder('c', 0)
       @robot.set_throttle('f', 20)
@@ -149,6 +148,7 @@ while true do
       
       send_tweet("I was previously #{robot_mood?}, but now I am bored.")
     end
+    @current_mood = new_mood
   end
   sleep 30
 end
