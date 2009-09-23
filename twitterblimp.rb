@@ -108,6 +108,7 @@ end
 
 tweet_hello
 #sleep 10
+@notification_sent = false
 
 # loop looking for tweets that tell us what to do
 while true do
@@ -115,7 +116,13 @@ while true do
   @robot.status
   res = @robot.response
   sleep 1
-  send_tweet(res)
+  
+  if not @notification_sent
+    send_tweet(res)
+    @notification_sent = true
+  else
+    @notification_sent = false
+  end
   
   p "Checking mood..."
   new_mood = check_robot_mood
@@ -137,7 +144,7 @@ while true do
       @robot.set_throttle('f', 0)
     end
   end
-  sleep 60
+  sleep 30
 end
 
 

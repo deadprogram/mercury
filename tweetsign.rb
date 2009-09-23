@@ -15,13 +15,37 @@ def print_tweet(tweet)
   end
 end
 
-def search_5_recent_tweets_about_flyingrobot
+def search_5_recent_tweets_from_flyingrobot
   client = Grackle::Client.new
-  client[:search].search? :q => "flyingrobot", :rpp => "5", :since => Date.today.to_s
+  client[:search].search? :q => "from:flyingrobot", :rpp => "5", :since => Date.today.to_s
+end
+
+def clear_sign
+  bb = BetaBrite::USB.new { |sign|
+    sign.textfile do
+      print ""
+    end
+
+    sign.textfile('B') do
+      print ""
+    end
+
+    sign.textfile('C') do
+      print ""
+    end
+
+    sign.textfile('D') do
+      print ""
+    end
+
+    sign.textfile('E') do
+      print ""
+    end
+  }.write!
 end
 
 def display_recent_tweets
-  tweets = search_5_recent_tweets_about_flyingrobot
+  tweets = search_5_recent_tweets_from_flyingrobot
   p tweets
 
   bb = BetaBrite::USB.new { |sign|
@@ -46,6 +70,9 @@ def display_recent_tweets
     end
   }.write!
 end
+
+# main routine
+clear_sign
 
 while true do
   p "Displaying tweets at #{Time.now}"
