@@ -114,7 +114,6 @@ tweet_hello
 while true do
   p "Tweeting status..."
   @robot.status
-  sleep 1
   res = @robot.response
   res = "Waiting for status..." if not res.is_a?(String)
   
