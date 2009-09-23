@@ -47,7 +47,7 @@ end
 def search_recent_tweets_about_flyingrobot
   do_in_child do
     client = Grackle::Client.new
-    client[:search].search?(:q => "flyingrobot -from:flyingrobot", :rpp => "5", :since => Date.today.to_s)
+    client[:search].search?(:q => "flyingrobot -from:flyingrobot", :rpp => "4", :since => Date.today.to_s)
   end
 end
 
