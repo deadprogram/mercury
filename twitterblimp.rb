@@ -5,7 +5,7 @@ require 'lib/flying_robot_proxy'
 
 # twitter stuff
 HAPPY_WORDS = ["good", "nice", "love"]
-SAD_WORDS = ["bad", "no", "stop"]
+SAD_WORDS = ["bad", "no", "stop", "stay"]
 
 $data = {}
 
@@ -120,11 +120,11 @@ tweet_hello
 while true do
   p "Tweeting status..."
   @robot.status
-  r = @robot.response
-  r = "Waiting for status..." if not r.is_a?(String)
+  @r = @robot.response
+  @r = "Waiting for status..." if not @r.is_a?(String)
   
   if not @notification_sent
-    send_tweet(r)
+    send_tweet(@r)
     @notification_sent = true
   else
     @notification_sent = false
