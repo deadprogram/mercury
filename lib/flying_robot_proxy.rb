@@ -193,7 +193,7 @@ class FlyingRobotProxy
     else
       @autopilot_mode = 0
     end
-    @sp.write "a #{@autopilot_mode}\r"
+    @sp.write "p #{@autopilot_mode}\r"
   end
   
   def read_compass
