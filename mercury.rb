@@ -45,7 +45,7 @@ class Mercury < Shoes
         @compass_display = flow(:width => 280, :height => 280, :align => 'center') { draw_background }
       end
       stack do
-        flow(:margin_left => 20, :margin_top => 20, :align => 'center') { @battery_display = progress }
+        flow(:margin_left => 20, :margin_top => 10, :align => 'center') { para "Battery Voltage", :stroke => black; @battery_display = progress }
       end
       stack(:height => 100) do
         background black
@@ -183,11 +183,12 @@ class Mercury < Shoes
     stack do
       caption "Port"
       @port = list_box(:items => ["/dev/tty.usbserial-A700636n", "/dev/tty.usbserial-A6007uob", "/dev/tty.usbserial-A8007UEt"], :width => 200)
+      @baud_rate = list_box(:items => ["9600", "19200", "38400", "57600"], :width => 80)
       flow { @use_mouse = check; para "Use Mouse Control" }
       
       button("Connect") {
         session[:use_mouse] = @use_mouse.checked?
-        robot.connect(@port.text)
+        robot.connect(@port.text, @baud_rate.text.to_i)
         visit "/fly"
       }
     end
@@ -199,4 +200,4 @@ class Mercury < Shoes
   end
 end
 
-Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 250, :height => 520
+Mercury.app :title => 'Mercury - flying_robot virtual RC', :width => 250, :height => 542

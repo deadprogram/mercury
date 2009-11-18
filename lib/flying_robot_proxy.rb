@@ -198,11 +198,11 @@ class FlyingRobotProxy
   
   def read_compass
     @sp.write "i c\r"
-    @compass_heading = @sp.read
+    @compass_heading = @sp.read.match(/\d+\.\d+/)[0]
   end
 
   def read_battery
     @sp.write "i b\r"
-    @battery_level = @sp.read
+    @battery_level = @sp.read.match(/\d+/)[0]
   end
 end
