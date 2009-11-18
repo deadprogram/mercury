@@ -90,7 +90,7 @@ def check_robot_mood
 end
 
 if ! ARGV[0] || ! ARGV[1]
-  puts "Usage ruby twitterblimp.rb /dev/usb.xxx 19200 joeblow passwrod"
+  puts "Usage ruby twitterblimp.rb /dev/usb.xxx 19200 [joeblow passwrod/--file]"
   exit
 end
 
@@ -110,62 +110,68 @@ puts @robot.response
 if ARGV[2] && ARGV[3]
   @use_twitter = true
 end
- 
-@twitter_username = ARGV[2] 
-@twitter_password = ARGV[3] 
+
+if ARGV[2] = "--file"
+  @twitter_username = YAML::load_file( File.join(File.dirname(__FILE__), 'config/twitter.yml'))['twitter']['username'] 
+  @twitter_password = YAML::load_file( File.join(File.dirname(__FILE__), 'config/twitter.yml'))['twitter']['password']  
+else   
+  @twitter_username = ARGV[2] 
+  @twitter_password = ARGV[3] 
+end
 
 tweet_hello
 
-@robot.status
-@r = @robot.response
-p "Tweeting status..."
-send_tweet(@r)
-@notification_count = 5
+while true do 
+  @robot.status
+  @r = @robot.response
+  p "Tweeting status..."
+  send_tweet(@r) if !@r.empty?
 
-sleep 30
-
-# loop looking for tweets that tell us what to do
-while true do  
-  if @notification_count == 0
-    p "Tweeting status..."
-    @robot.status
-    @r = @robot.response
-    @r = "Waiting for status..." if not @r.is_a?(String)
-    send_tweet(@r)
-    @notification_count = 5
-  else
-    @notification_count = @notification_count - 1
-  end
-  
-  p "Checking mood..."
-  new_mood = check_robot_mood
-  if new_mood != robot_mood?
-    puts "I was previously #{robot_mood?}, but now I am #{new_mood}"
-    if new_mood == :happy
-      @robot.set_elevator('c', 0)
-      @robot.set_rudder('l', 90)
-      @robot.set_throttle('f', 40)
-      
-      send_tweet("I was previously #{robot_mood?}, but now I am happy. I will spin for joy.")
-    elsif new_mood == :sad
-      @robot.set_elevator('d', 90)
-      @robot.set_rudder('c', 0)
-      @robot.set_throttle('f', 50)
-      
-      send_tweet("I was previously #{robot_mood?}, but I am now sad. If that is how you feel, I will just crash.")
-    else
-      # bored
-      @robot.set_elevator('c', 0)
-      @robot.set_rudder('c', 0)
-      @robot.set_throttle('f', 0)
-      
-      send_tweet("I was previously #{robot_mood?}, but now I am bored.")
-    end
-    @current_mood = new_mood
-  else
-    send_tweet "I am still #{robot_mood?}."
-  end
-  sleep 30
+  sleep 60
 end
 
-
+# loop looking for tweets that tell us what to do
+# while true do  
+#   if @notification_count == 0
+#     p "Tweeting status..."
+#     @robot.status
+#     @r = @robot.response
+#     @r = "Waiting for status..." if not @r.is_a?(String)
+#     send_tweet(@r)
+#     @notification_count = 5
+#   else
+#     @notification_count = @notification_count - 1
+#   end
+#   
+#   p "Checking mood..."
+#   new_mood = check_robot_mood
+#   if new_mood != robot_mood?
+#     puts "I was previously #{robot_mood?}, but now I am #{new_mood}"
+#     if new_mood == :happy
+#       @robot.set_elevator('c', 0)
+#       @robot.set_rudder('l', 90)
+#       @robot.set_throttle('f', 40)
+#       
+#       send_tweet("I was previously #{robot_mood?}, but now I am happy. I will spin for joy.")
+#     elsif new_mood == :sad
+#       @robot.set_elevator('d', 90)
+#       @robot.set_rudder('c', 0)
+#       @robot.set_throttle('f', 50)
+#       
+#       send_tweet("I was previously #{robot_mood?}, but I am now sad. If that is how you feel, I will just crash.")
+#     else
+#       # bored
+#       @robot.set_elevator('c', 0)
+#       @robot.set_rudder('c', 0)
+#       @robot.set_throttle('f', 0)
+#       
+#       send_tweet("I was previously #{robot_mood?}, but now I am bored.")
+#     end
+#     @current_mood = new_mood
+#   else
+#     send_tweet "I am still #{robot_mood?}."
+#   end
+#   sleep 30
+# end
+# 
+# 
